@@ -107,5 +107,23 @@ class MainActivity : AppCompatActivity() {
         createIndirectLight()
         createDefaultRenderables()
     }
+    private fun loadModel(){
+        isClicked=true
+        CoroutineScope(Dispatchers.IO).launch {
+            val mergeBuffer = fm.getAnimatedModelBuffer(
+                avatarUrl = avatarUrlField.text.toString(),
+                animationUrl = animationUrlField.text.toString()
+            )
+            CoroutineScope(Dispatchers.Main).launch {
+                if (mergeBuffer != null) {
+                    val byteBufferWithRewind = mergeBuffer.rewind()
+                    modelViewer.loadModelGlb(byteBufferWithRewind)
+                }
+                updateRootTransform()
+                isClicked=false
+            }
+        }
+    }
+
 
 }

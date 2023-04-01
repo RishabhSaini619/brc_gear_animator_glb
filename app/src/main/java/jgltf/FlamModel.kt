@@ -102,18 +102,18 @@ class FlamModel {
     }
 
     /**
-     * @param modelUrl : URL of the model in string
+     * @param avatarUrl : URL of the model in string
      * @param animationUrl : OPTIONAL URl of the animation to be appended
      * animationUrl has a default value
      */
     fun getAnimatedModelBuffer(
-        modelUrl: String,
+        avatarUrl: String,
         animationUrl: String = ANIMATION_URLS.random()
     ): ByteBuffer? {
         val gltfAssetReader = GltfAssetReader()
 
         val animGltfAsset = gltfAssetReader.read(URI(animationUrl))
-        val modelGltfAsset = gltfAssetReader.read(URI(modelUrl))
+        val modelGltfAsset = gltfAssetReader.read(URI(avatarUrl))
 
         val newAnimModel =
             jgltf.model.v2.GltfModelCreatorV2.create(animGltfAsset as GltfAssetV2?)
@@ -250,15 +250,15 @@ class FlamModel {
 
 
     /**
-     * @param modelUrl: Url of the Avatar file
+     * @param avatarUrl: Url of the Avatar file
      * @param animationPath: URl of the animation file
      * @return Path of the generated model in storage
      */
-    fun getAnimatedModel(modelUrl: String, animationUrl: String = ANIMATION_URLS.random()): String {
+    fun getAnimatedModel(avatarUrl: String, animationUrl: String = ANIMATION_URLS.random()): String {
         val gltfAssetReader = GltfAssetReader()
 
         val animGltfAsset = gltfAssetReader.read(URI(animationUrl))
-        val modelGltfAsset = gltfAssetReader.read(URI(modelUrl))
+        val modelGltfAsset = gltfAssetReader.read(URI(avatarUrl))
 
         val newAnimModel =
             jgltf.model.v2.GltfModelCreatorV2.create(animGltfAsset as GltfAssetV2?)
