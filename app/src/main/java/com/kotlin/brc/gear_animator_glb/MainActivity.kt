@@ -48,6 +48,31 @@ class MainActivity : AppCompatActivity() {
         private var isClicked=false
     }
 
+    inner class FrameCallback : Choreographer.FrameCallback {
+        private val startTime = System.nanoTime()
+        override fun doFrame(frameTimeNanos: Long) {
+            choreographer.postFrameCallback(this)
+
+
+            modelViewer.animator?.apply {
+                if (animationCount > 0) {
+                    val elapsedTimeSeconds = (frameTimeNanos - startTime).toDouble() / 1_000_000_000
+                    applyAnimation(0, elapsedTimeSeconds.toFloat())
+                }
+                updateBoneMatrices()
+            }
+
+            modelViewer.render(frameTimeNanos)
+
+        }
+    }
+    inner class DoubleTapListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            modelViewer.destroyModel()
+//            createDefaultRenderables()
+            return super.onDoubleTap(e)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.file_layout)
