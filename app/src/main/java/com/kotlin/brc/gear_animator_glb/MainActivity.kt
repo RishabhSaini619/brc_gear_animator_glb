@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
         private val fm = FlamModel()
         private lateinit var choreographer: Choreographer
         private lateinit var doubleTapDetector: GestureDetector
-//        private val frameScheduler = FrameCallback()
-//        private val doubleTapListener = DoubleTapListener()
+        private val frameScheduler = FrameCallback()
+        private val doubleTapListener = DoubleTapListener()
         private val viewerContent = AutomationEngine.ViewerContent()
         private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
         private lateinit var bottomDrawerSheet: ConstraintLayout
@@ -122,6 +122,19 @@ class MainActivity : AppCompatActivity() {
                 updateRootTransform()
                 isClicked=false
             }
+        }
+    }
+    private fun setUpEventListener() {
+
+        bottomSheetBehavior.apply {
+            peekHeight = 100
+        }
+        glbAnimatorButton.setOnTouchListener { _, _ ->
+            Log.i("called","called")
+            if(!isClicked){
+                loadModel()
+            }
+            true
         }
     }
 
