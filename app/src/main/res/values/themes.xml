@@ -1,40 +1,36 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Flam" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/light_yellowish</item>
-        <item name="colorPrimaryVariant">#000000</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@android:color/black</item>
-        <item name="android:windowDisablePreview">true</item>
+    <style name="Theme.MyApp" parent="Theme.AppCompat">
+
+        <!-- Original AppCompat attributes. -->
+        <item name="colorPrimary">#123456</item>
+        <item name="colorSecondary">#123456</item>
+        <item name="android:colorBackground">#123456</item>
+        <item name="colorError">#123456</item>
+
+        <!-- New MaterialComponents attributes. -->
+        <item name="colorPrimaryVariant">#123456</item>
+        <item name="colorSecondaryVariant">#123456</item>
+        <item name="colorSurface">#123456</item>
+        <item name="colorOnPrimary">#123456</item>
+        <item name="colorOnSecondary">#123456</item>
+        <item name="colorOnBackground">#123456</item>
+        <item name="colorOnError">#123456</item>
+        <item name="colorOnSurface">#123456</item>
+        <item name="scrimBackground">@color/mtrl_scrim_color</item>
+        <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.MaterialComponents.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.MaterialComponents.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.MaterialComponents.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.MaterialComponents.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
+        <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
+
     </style>
-
-    <style name="Theme.Flam.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight" />
-
-    <style name="Theme.Flam.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="ShapeAppearanceOverlay.Flam.Button.Circle" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.Flam.Button.CircleOutlined" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
-
 </resources>

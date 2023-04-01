@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/file_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--surface view-->
+    <SurfaceView
+        android:id="@+id/view_surface"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--CoordinatorLayout-->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <!--bottom drawer layout-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottom_drawer_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@drawable/dialog_bg"
+            android:orientation="vertical"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <!--bottom_drawer_image-->
+            <ImageView
+                android:id="@+id/bottom_drawer_image"
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center|top"
+                android:contentDescription="@string/bottom_drawer_image"
+                android:contextClickable="false"
+                android:scaleType="fitXY"
+                android:src="@android:drawable/dialog_holo_light_frame"
+                android:visibility="visible"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/avatar_url_input_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:srcCompat="@android:drawable/button_onoff_indicator_off" />
+
+            <!--avatar_url_input_layout-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/avatar_url_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/enter_avatar_glb_url"
+                android:padding="5dp"
+                android:paddingTop="20dp"
+                android:textColorHint="#6200EA"
+                app:hintAnimationEnabled="true"
+                app:hintEnabled="true"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bottom_drawer_image"
+                app:layout_constraintBottom_toTopOf="@+id/animation_url_input_layout"
+                >
+
+                <!--avatar_url_field-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/avatar_url_field"
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="#1FFFFFFF"
+                    android:inputType="textUri"
+                    android:maxLines="1"
+                    android:padding="10dp"
+                    android:text="@string/avatar_default_url"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!--animation_url_input_layout-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/animation_url_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_animation_glb_url"
+                android:padding="5dp"
+                android:paddingTop="20dp"
+                android:textColorHint="#6200EA"
+                app:hintAnimationEnabled="true"
+                app:hintEnabled="true"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/avatar_url_input_layout"
+                tools:layout_constraintBottom_toTopOf="@id/animate_button">
+
+                <!--anim_url_field-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/animation_url_field"
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="#1FFFFFFF"
+                    android:inputType="textUri"
+                    android:maxLines="1"
+                    android:padding="10dp"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!--animate_button-->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/animate_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:text="@string/animate_button"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textColorHint="#676200EA"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/animation_url_input_layout"
+                tools:layout_conversion_absoluteHeight="48dp"
+                tools:layout_conversion_absoluteWidth="94dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
