@@ -73,17 +73,6 @@ class MainActivity : AppCompatActivity() {
             return super.onDoubleTap(e)
         }
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.file_layout)
-        choreographer = Choreographer.getInstance()
-        surfaceView = findViewById(R.id.view_surface)
-
-        bottomDrawerSheet = findViewById(R.id.bottom_drawer_sheet)
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomDrawerSheet)
-
-        setupEnvironment()
-    }
     private fun setupEnvironment() {
 
         // on mobile, better use lower quality color buffer
@@ -186,10 +175,43 @@ class MainActivity : AppCompatActivity() {
     private fun updateRootTransform() {
         modelViewer.transformToUnitCube()
     }
+    private fun createDefaultRenderables() {
 
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO) { // network call
+                val url = URL("https://models.readyplayer.me/64242ab4c9e8aa39b5d1b4dc.glb")
+                val output = ByteArrayOutputStream()
+                val conn: URLConnection = url.openConnection()
+                conn.setRequestProperty("User-Agent", "Firefox")
 
+                conn.getInputStream().use { inputStream ->
+                    var n: Int
+                    val buffer = ByteArray(1024)
+                    while (-1 != inputStream.read(buffer).also { n = it }) {
+                        output.write(buffer, 0, n)
+                    }
+                }
+                val img: ByteArray = output.toByteArray()
+                val imageBytes = ByteBuffer.wrap(img)
+                Log.i("ready","ioThread $imageBytes")
+                withContext(Dispatchers.Main){
+                    Log.i("ready","mainThread")
+                    modelViewer.loadModelGlb(imageBytes)
+                    updateRootTransform()
+                }
+            }
+        }
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.file_layout)
+        choreographer = Choreographer.getInstance()
+        surfaceView = findViewById(R.id.view_surface)
 
+        bottomDrawerSheet = findViewById(R.id.bottom_drawer_sheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomDrawerSheet)
 
-
+        setupEnvironment()
+    }
 
 }
