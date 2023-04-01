@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         private lateinit var glbAnimatorButton: MaterialButton
         private var isClicked=false
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.file_layout)
@@ -157,6 +158,10 @@ class MainActivity : AppCompatActivity() {
         input.read(bytes)
         return ByteBuffer.wrap(bytes)
     }
+    private fun updateRootTransform() {
+        modelViewer.transformToUnitCube()
+    }
+
 
 
 
