@@ -213,5 +213,18 @@ class MainActivity : AppCompatActivity() {
 
         setupEnvironment()
     }
+    override fun onResume() {
+        super.onResume()
+        choreographer.postFrameCallback(frameScheduler)
+    }
+    override fun onPause() {
+        super.onPause()
+        choreographer.removeFrameCallback(frameScheduler)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        choreographer.removeFrameCallback(frameScheduler)
+//        remoteServer?.close()
+    }
 
 }
