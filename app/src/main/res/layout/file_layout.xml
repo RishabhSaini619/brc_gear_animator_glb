@@ -55,7 +55,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/avatar_url_input_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/enter_avatar_glb_url"
@@ -74,7 +74,7 @@
                 <!--avatar_url_field-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/avatar_url_field"
-                    android:layout_width="350dp"
+                    android:layout_width="300dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="50dp"
@@ -96,7 +96,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/animation_url_input_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_animation_glb_url"
                 android:padding="5dp"
@@ -113,7 +113,7 @@
                 <!--anim_url_field-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/animation_url_field"
-                    android:layout_width="350dp"
+                    android:layout_width="300dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="50dp"
@@ -125,21 +125,19 @@
                     android:textAlignment="textStart"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="16sp"
-                    />
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!--animate_button-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/animate_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:paddingTop="0dp"
-                android:paddingBottom="0dp"
                 android:text="@string/animate_button"
                 android:textAllCaps="true"
+                android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textColorHint="#676200EA"
                 android:textSize="16sp"
