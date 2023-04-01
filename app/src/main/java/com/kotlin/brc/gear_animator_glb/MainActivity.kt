@@ -137,6 +137,22 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+    private fun createIndirectLight() {
+
+        val engine = modelViewer.engine
+        val scene = modelViewer.scene
+        val ibl = "default_env"
+        readCompressedAsset("${ibl}_ibl.ktx").let {
+            scene.indirectLight = KTX1Loader.createIndirectLight(engine, it)
+            scene.indirectLight!!.intensity = 30_000.0f
+            viewerContent.indirectLight = modelViewer.scene.indirectLight
+        }
+        readCompressedAsset("${ibl}_skybox.ktx").let {
+            scene.skybox = KTX1Loader.createSkybox(engine, it)
+        }
+    }
+
+
 
 
 }
