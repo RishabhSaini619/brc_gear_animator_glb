@@ -151,6 +151,13 @@ class MainActivity : AppCompatActivity() {
             scene.skybox = KTX1Loader.createSkybox(engine, it)
         }
     }
+    private fun readCompressedAsset(assetName: String): ByteBuffer {
+        val input = assets.open(assetName)
+        val bytes = ByteArray(input.available())
+        input.read(bytes)
+        return ByteBuffer.wrap(bytes)
+    }
+
 
 
 
