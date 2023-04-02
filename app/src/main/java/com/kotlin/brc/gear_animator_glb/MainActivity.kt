@@ -1,7 +1,6 @@
 package com.kotlin.brc.gear_animator_glb
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.Choreographer
@@ -12,8 +11,12 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.filament.Engine
+import com.google.android.filament.Scene
 import com.google.android.filament.View
-import com.google.android.filament.utils.*
+import com.google.android.filament.utils.AutomationEngine
+import com.google.android.filament.utils.KTX1Loader
+import com.google.android.filament.utils.ModelViewer
+import com.google.android.filament.utils.Utils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButton
 import jgltf.FlamModel
@@ -31,29 +34,30 @@ class MainActivity : AppCompatActivity() {
         init {
             Utils.init()
         }
-        val view = modelViewer.view
-        private val fm = FlamModel()
-        private lateinit var choreographer: Choreographer
-        private lateinit var doubleTapDetector: GestureDetector
-        private val frameScheduler = FrameCallback()
-        private val doubleTapListener = DoubleTapListener()
-        private val viewerContent = AutomationEngine.ViewerContent()
-        private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
-        private lateinit var bottomDrawerSheet: ConstraintLayout
-        private lateinit var modelViewer: ModelViewer
-        private lateinit var surfaceView: SurfaceView
-        private lateinit var avatarUrlField: EditText
-        private lateinit var animationUrlField: EditText
-        private lateinit var glbAnimatorButton: MaterialButton
-        private var isClicked=false
     }
+    private val fm = FlamModel()
+    private val frameScheduler = FrameCallback()
+    private val doubleTapListener = DoubleTapListener()
+    private val viewerContent = AutomationEngine.ViewerContent()
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+    private lateinit var bottomDrawerSheet: ConstraintLayout
+    private lateinit var doubleTapDetector: GestureDetector
+    private lateinit var glbAnimatorButton: MaterialButton
+    private lateinit var animationUrlField: EditText
+    private lateinit var avatarUrlField: EditText
+    private lateinit var choreographer: Choreographer
+    private lateinit var modelViewer: ModelViewer
+    private lateinit var surfaceView: SurfaceView
+    private lateinit var engine : Engine
+    private lateinit var scene : Scene
+    private lateinit var ibl : String
+    private lateinit var view : View
+    private var isClicked=false
 
     inner class FrameCallback : Choreographer.FrameCallback {
         private val startTime = System.nanoTime()
         override fun doFrame(frameTimeNanos: Long) {
             choreographer.postFrameCallback(this)
-
-
             modelViewer.animator?.apply {
                 if (animationCount > 0) {
                     val elapsedTimeSeconds = (frameTimeNanos - startTime).toDouble() / 1_000_000_000
@@ -61,7 +65,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 updateBoneMatrices()
             }
-
             modelViewer.render(frameTimeNanos)
 
         }
@@ -69,17 +72,43 @@ class MainActivity : AppCompatActivity() {
     inner class DoubleTapListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDoubleTap(e: MotionEvent): Boolean {
             modelViewer.destroyModel()
-//            createDefaultRenderables()
             return super.onDoubleTap(e)
         }
     }
+
+    private fun loadModel(){
+        isClicked=true
+        CoroutineScope(Dispatchers.IO).launch {
+            val mergeBuffer = fm.getAnimatedModelBuffer(
+                avatarUrl = avatarUrlField.text.toString(),
+                animationUrl = animationUrlField.text.toString()
+            )
+            CoroutineScope(Dispatchers.Main).launch {
+                if (mergeBuffer != null) {
+                    val byteBufferWithRewind = mergeBuffer.rewind()
+                    modelViewer.loadModelGlb(byteBufferWithRewind)
+                }
+                updateRootTransform()
+                isClicked=false
+            }
+        }
+    }
     private fun setupEnvironment() {
+        modelViewer = ModelViewer(surfaceView)
+
+        viewerContent.view = modelViewer.view
+        viewerContent.scene = modelViewer.scene
+        viewerContent.sunlight = modelViewer.light
+        viewerContent.renderer = modelViewer.renderer
+        viewerContent.lightManager = modelViewer.engine.lightManager
+        doubleTapDetector = GestureDetector(applicationContext, doubleTapListener)
+
+        view = modelViewer.view
 
         // on mobile, better use lower quality color buffer
         view.renderQuality = view.renderQuality.apply {
             hdrColorBuffer = View.QualityLevel.MEDIUM
         }
-
         // dynamic resolution often helps a lot
         view.dynamicResolutionOptions = view.dynamicResolutionOptions.apply {
             enabled = true
@@ -103,60 +132,29 @@ class MainActivity : AppCompatActivity() {
         view.bloomOptions = view.bloomOptions.apply {
             enabled = true
         }
-
-        doubleTapDetector = GestureDetector(applicationContext, doubleTapListener)
-        modelViewer = ModelViewer(surfaceView, engine = Engine.create())
-        viewerContent.view = modelViewer.view
-        viewerContent.sunlight = modelViewer.light
-        viewerContent.lightManager = modelViewer.engine.lightManager
-        viewerContent.scene = modelViewer.scene
-        viewerContent.renderer = modelViewer.renderer
-
+    }
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setUpEventListener() {
+        bottomSheetBehavior.apply {
+            peekHeight = 100
+        }
+        glbAnimatorButton.setOnTouchListener { _, _ ->
+            Log.i("called","called")
+            if(!isClicked) loadModel()
+            true
+        }
         surfaceView.setOnTouchListener { _, event ->
             modelViewer.onTouchEvent(event)
             doubleTapDetector.onTouchEvent(event)
             true
         }
 
-        setUpEventListener()
-        createIndirectLight()
-        createDefaultRenderables()
-    }
-    private fun loadModel(){
-        isClicked=true
-        CoroutineScope(Dispatchers.IO).launch {
-            val mergeBuffer = fm.getAnimatedModelBuffer(
-                avatarUrl = avatarUrlField.text.toString(),
-                animationUrl = animationUrlField.text.toString()
-            )
-            CoroutineScope(Dispatchers.Main).launch {
-                if (mergeBuffer != null) {
-                    val byteBufferWithRewind = mergeBuffer.rewind()
-                    modelViewer.loadModelGlb(byteBufferWithRewind)
-                }
-                updateRootTransform()
-                isClicked=false
-            }
-        }
-    }
-    private fun setUpEventListener() {
-
-        bottomSheetBehavior.apply {
-            peekHeight = 100
-        }
-        glbAnimatorButton.setOnTouchListener { _, _ ->
-            Log.i("called","called")
-            if(!isClicked){
-                loadModel()
-            }
-            true
-        }
     }
     private fun createIndirectLight() {
 
-        val engine = modelViewer.engine
-        val scene = modelViewer.scene
-        val ibl = "default_env"
+        ibl = "default_env"
+        scene = modelViewer.scene
+        engine = modelViewer.engine
         readCompressedAsset("${ibl}_ibl.ktx").let {
             scene.indirectLight = KTX1Loader.createIndirectLight(engine, it)
             scene.indirectLight!!.intensity = 30_000.0f
@@ -166,24 +164,23 @@ class MainActivity : AppCompatActivity() {
             scene.skybox = KTX1Loader.createSkybox(engine, it)
         }
     }
+    private fun updateRootTransform() {
+        modelViewer.transformToUnitCube()
+    }
     private fun readCompressedAsset(assetName: String): ByteBuffer {
         val input = assets.open(assetName)
         val bytes = ByteArray(input.available())
         input.read(bytes)
         return ByteBuffer.wrap(bytes)
     }
-    private fun updateRootTransform() {
-        modelViewer.transformToUnitCube()
-    }
     private fun createDefaultRenderables() {
 
-        CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO) { // network call
+        CoroutineScope(Dispatchers.IO).launch {
+
                 val url = URL("https://models.readyplayer.me/64242ab4c9e8aa39b5d1b4dc.glb")
                 val output = ByteArrayOutputStream()
                 val conn: URLConnection = url.openConnection()
                 conn.setRequestProperty("User-Agent", "Firefox")
-
                 conn.getInputStream().use { inputStream ->
                     var n: Int
                     val buffer = ByteArray(1024)
@@ -194,24 +191,29 @@ class MainActivity : AppCompatActivity() {
                 val img: ByteArray = output.toByteArray()
                 val imageBytes = ByteBuffer.wrap(img)
                 Log.i("ready","ioThread $imageBytes")
-                withContext(Dispatchers.Main){
+            CoroutineScope(Dispatchers.Main).launch{
                     Log.i("ready","mainThread")
                     modelViewer.loadModelGlb(imageBytes)
                     updateRootTransform()
                 }
             }
-        }
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.file_layout)
         choreographer = Choreographer.getInstance()
         surfaceView = findViewById(R.id.view_surface)
-
+        avatarUrlField = findViewById(R.id.avatar_url_field)
+        animationUrlField = findViewById(R.id.animation_url_field)
+        glbAnimatorButton = findViewById(R.id.animate_button)
         bottomDrawerSheet = findViewById(R.id.bottom_drawer_sheet)
         bottomSheetBehavior = BottomSheetBehavior.from(bottomDrawerSheet)
 
         setupEnvironment()
+        setUpEventListener()
+        createIndirectLight()
+        createDefaultRenderables()
     }
     override fun onResume() {
         super.onResume()
@@ -224,7 +226,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         choreographer.removeFrameCallback(frameScheduler)
-//        remoteServer?.close()
     }
 
 }
